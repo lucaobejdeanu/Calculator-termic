@@ -106,17 +106,20 @@ def genereaza_word(data_proiect, temp_ext, locatie):
 def genereaza_pdf(data_proiect, temp_ext, locatie):
     pdf = FPDF()
     pdf.add_page()
-
-    # Acest bloc este esențial pentru a încărca fontul cu diacritice
+    
+    # MODIFICAT: Adaugă toate cele patru stiluri de font
     try:
         pdf.add_font('DejaVu', '', 'DejaVuSans.ttf', uni=True)
+        pdf.add_font('DejaVu', 'B', 'DejaVuSans-Bold.ttf', uni=True) # Adaugă stilul Bold
+        pdf.add_font('DejaVu', 'I', 'DejaVuSans-Oblique.ttf', uni=True) # Adaugă stilul Italic
+        pdf.add_font('DejaVu', 'BI', 'DejaVuSans-BoldOblique.ttf', uni=True) # Adaugă stilul Bold Italic
+        
         pdf.set_font('DejaVu', '', 12)
-    except RuntimeError:
-        # Măsură de siguranță dacă fontul nu este găsit
+    except RuntimeError as e:
         pdf.set_font('Arial', '', 12)
-        st.warning("Fontul DejaVu nu a fost găsit. Diacriticele s-ar putea să nu fie afișate corect.", icon="⚠️")
+        st.warning(f"Fontul DejaVu nu a fost găsit. Diacriticele s-ar putea să nu fie afișate corect. Eroare: {e}", icon="⚠️")
 
-    # ... restul codului funcției ...
+
     beneficiar = st.session_state.get('beneficiar', 'Nespecificat'); proiectant = st.session_state.get('proiectant', 'Nespecificat'); data_azi = datetime.date.today().strftime("%d.%m.%Y")
     pdf.set_font_size(16); pdf.cell(0, 10, 'MEMORIU TEHNIC - INSTALAȚII TERMICE', 0, 1, 'C'); pdf.ln(10)
     pdf.set_font_size(12); pdf.multi_cell(0, 8, f"**1. DATE GENERALE**\n- **Proiect:** Calculul necesarului de căldură\n- **Beneficiar:** {beneficiar}\n- **Amplasament:** {locatie}\n- **Data:** {data_azi}", markdown=True); pdf.ln(5)
