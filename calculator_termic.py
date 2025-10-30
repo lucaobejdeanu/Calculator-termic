@@ -104,17 +104,14 @@ def genereaza_word(data_proiect, temp_ext, locatie):
     bio = io.BytesIO(); document.save(bio); return bio.getvalue()
 
 def genereaza_pdf(data_proiect, temp_ext, locatie):
-    # ATENTIE: Aceasta functie necesita ca fisierul DejaVuSans.ttf sa fie in acelasi folder cu scriptul
-    # Il puteti descarca de pe Google Fonts.
+    # ...
     pdf = FPDF()
     pdf.add_page()
-    try:
-        pdf.add_font('DejaVu', '', 'DejaVuSans.ttf', uni=True)
-        pdf.set_font('DejaVu', '', 12)
-    except RuntimeError:
-        pdf.set_font('Arial', '', 12)
-        st.warning("Fontul DejaVu nu a fost găsit. Diacriticele s-ar putea să nu fie afișate corect. Descărcați 'DejaVuSans.ttf' și plasați-l lângă script.", icon="⚠️")
-
+    
+    # Am eliminat complet blocul try/except și folosim direct un font standard
+    pdf.set_font('Arial', '', 12) 
+    
+    # ... restul codului funcției rămâne la fel
     beneficiar = st.session_state.get('beneficiar', 'Nespecificat'); proiectant = st.session_state.get('proiectant', 'Nespecificat'); data_azi = datetime.date.today().strftime("%d.%m.%Y")
     pdf.set_font_size(16); pdf.cell(0, 10, 'MEMORIU TEHNIC - INSTALAȚII TERMICE', 0, 1, 'C'); pdf.ln(10)
     pdf.set_font_size(12); pdf.multi_cell(0, 8, f"**1. DATE GENERALE**\n- **Proiect:** Calculul necesarului de căldură\n- **Beneficiar:** {beneficiar}\n- **Amplasament:** {locatie}\n- **Data:** {data_azi}", markdown=True); pdf.ln(5)
